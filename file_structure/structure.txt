@@ -1,0 +1,22 @@
+FoodFacts/
+    - file_structure/
+        - structure.txt
+        
+    - node_modules/
+    - public/
+    - src/
+        - assests/
+        - App.css
+        - App.tsx
+        - index.css
+        - main.tsx
+
+    - .gitignore
+    - eslint.config.js
+    - index.html
+    - package-lock.json
+    - README.md
+    - tsconfig.app.json
+    - tsconfig.json
+    - tsconfig.node.json
+    - vite.config.tx
