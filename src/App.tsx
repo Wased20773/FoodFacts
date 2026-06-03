@@ -9,7 +9,7 @@ function App() {
 
   function startListening(): void {
     const SpeechRecognitionConstructor:
-      | typeof SpeechRecognition
+      | SpeechRecognitionConstructor
       | undefined = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognitionConstructor) {
