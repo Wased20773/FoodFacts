@@ -64,17 +64,27 @@ function App() {
     }
   }
 
+  function handleTranscriptChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setTranscript(event.target.value);
+  }
+
   return (
-    <>
-      <h1>Food Facts VUI</h1>
+    <div className='test'>
+      <h1 className='heading-interface'>Food Facts VUI</h1>
 
       <VoiceButton isListening={isListening} onClick={toggleListening} />
 
       <section id='transcript-section'>
-        <h2>Transcript</h2>
-        <p>{transcript || 'Say something...'}</p>
+        <h2 style={{marginTop: '0'}}>Transcript</h2>
+        <input
+          className='voice-input-field'
+          type='text'
+          value={transcript}
+          placeholder='Ask me something...'
+          onChange={handleTranscriptChange}
+        />
       </section>
-    </>
+    </div>
   )
 }
 

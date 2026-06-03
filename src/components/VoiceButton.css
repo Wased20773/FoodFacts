@@ -16,10 +16,14 @@
 
 .speak-button-container {
     position: absolute;
-    left: 0; 
-    right: 0;
-    top: 0;
-    bottom: 0;
+
+    /* below keeps the container absolutly centered in the viewport */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: var(--voice-button-size);
+    max-height: var(--voice-button-size_max);
     display: grid;
     justify-items: center;
     align-items: center;
@@ -29,13 +33,13 @@
     .orb-3 {
         grid-area: 1/1;
 
-        width: calc(var(--voice-button-size));
-        max-width: calc(var(--voice-button-size_max));
-        height: calc(var(--voice-button-size));
-        max-height: calc(var(--voice-button-size_max));
+        width: var(--voice-button-size);
+        max-width: var(--voice-button-size_max);
+        height: var(--voice-button-size);
+        max-height: var(--voice-button-size_max);
 
         filter: blur(10px);
-        /* mix-blend-mode: screen; */
+        mix-blend-mode: screen;
         opacity: 0;
 
         animation: rotate 10s linear infinite;
@@ -97,13 +101,19 @@ button {
         border-radius: 50%;
         
         background: rgb(160, 41, 160);
-        box-shadow: 0 0 5px 5px rgb(160, 41, 160);
+        box-shadow: 0 0 20px 0 rgb(160, 41, 160);
 
         opacity: 0.5;
         color: white;
         z-index: 10;
 
-        transition: 0.3s
+        /* transform: scale(0); */
+        
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &#speak-button:hover {
+        transform: scale(1.05);
     }
 
     &.speaking-active {

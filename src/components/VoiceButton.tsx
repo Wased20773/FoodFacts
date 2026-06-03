@@ -23,7 +23,7 @@ export default function VoiceButton({ isListening, onClick }: VoiceButtonProps):
         type='button'
         onClick={onClick}
       >
-        { isListening ? 'Stop Listening' : 'Start Listening' }
+        { isListening ? 'Listening' : 'Say Something' }
       </button>
     </div>
   )
