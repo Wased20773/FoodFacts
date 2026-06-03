@@ -8,16 +8,18 @@ function App() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   function startListening(): void {
-    const SpeechRecognitionConstructor:
+    if (recognitionRef.current) return;
+
+    const RecognitionClass:
       | SpeechRecognitionConstructor
       | undefined = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (!SpeechRecognitionConstructor) {
+    if (!RecognitionClass) {
       alert('Speech recognition is not supported in this browser.');
       return;
     }
     
-    const recognition: SpeechRecognition = new SpeechRecognitionConstructor();
+    const recognition: SpeechRecognition = new RecognitionClass();
 
     recognition.lang = 'en-US';
     recognition.continuous = true;
@@ -42,6 +44,7 @@ function App() {
     };
 
     recognition.onend = (): void => {
+      recognitionRef.current = null;
       setIsListening(false);
     };
 
@@ -51,7 +54,6 @@ function App() {
   
   function stopListening(): void {
     recognitionRef.current?.stop();
-    setIsListening(false);
   }
 
   function toggleListening(): void {

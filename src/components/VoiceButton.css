@@ -111,3 +111,7 @@ button {
         opacity: 1 !important;
     }
 }
+
+button:hover {
+    cursor: pointer;
+}

@@ -10,6 +10,7 @@ FoodFacts/
         - assests/
         - components/
             - VoiceButton.tsx
+            - VoiceButton.css
             
         - App.css
         - App.tsx
