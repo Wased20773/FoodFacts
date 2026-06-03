@@ -1,0 +1,113 @@
+:root {
+    --voice-button-size: 60vw;
+    --voice-button-size_max: 500px;
+
+    --orb-color-1:  radial-gradient(
+                        circle at 30% 30%,
+                        rgba(255, 84, 84, 0.9),
+                        rgba(255, 0, 0, 0.4)
+                    );
+    --orb-color-2:  radial-gradient(
+                        circle at 70% 70%,
+                        rgba(77, 77, 255, 0.9),
+                        rgba(0, 0, 255, 0.4)
+                    );
+}
+
+.speak-button-container {
+    position: absolute;
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+
+    .orb-1,
+    .orb-2,
+    .orb-3 {
+        grid-area: 1/1;
+
+        width: calc(var(--voice-button-size));
+        max-width: calc(var(--voice-button-size_max));
+        height: calc(var(--voice-button-size));
+        max-height: calc(var(--voice-button-size_max));
+
+        filter: blur(10px);
+        /* mix-blend-mode: screen; */
+        opacity: 0;
+
+        animation: rotate 10s linear infinite;
+        transition: opacity 0.5s;
+    }
+
+    .orb-1.active,
+    .orb-2.active,
+    .orb-3.active {
+        opacity: 0.5;
+    }
+
+    .orb-1 {
+        background: var(--orb-color-1);
+        box-shadow:
+            0 0 20px rgba(255, 0, 0, 0.7),
+            0 0 40px rgba(255, 0, 0, 0.4);
+        border-radius: 40% 50% 40% 50%;
+
+        z-index: 1;
+    }
+    
+    .orb-2 {
+        background: var(--orb-color-2);
+        box-shadow:
+            0 0 20px rgba(0, 100, 255, 0.7),
+            0 0 40px rgba(0, 100, 255, 0.4);
+        border-radius: 50% 40% 50% 40%;
+
+        z-index: 2;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.05);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+
+button {
+    &#speak-button {
+        grid-area: 1/1;
+
+        padding: 0;
+
+        width: var(--voice-button-size);
+        max-width: var(--voice-button-size_max);
+        height: var(--voice-button-size);
+        max-height: var(--voice-button-size_max);
+
+        border: 1px solid rgba(0, 0, 0, 0); /* prevents darker color from background elem and box-shadow */
+        border-radius: 50%;
+        
+        background: rgb(160, 41, 160);
+        box-shadow: 0 0 5px 5px rgb(160, 41, 160);
+
+        opacity: 0.5;
+        color: white;
+        z-index: 10;
+
+        transition: 0.3s
+    }
+
+    &.speaking-active {
+        transform: 0.3s;
+        opacity: 1 !important;
+    }
+}

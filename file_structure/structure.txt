@@ -5,7 +5,12 @@ FoodFacts/
     - node_modules/
     - public/
     - src/
+        - types/
+            - speach.d.ts
         - assests/
+        - components/
+            - VoiceButton.tsx
+            
         - App.css
         - App.tsx
         - index.css
