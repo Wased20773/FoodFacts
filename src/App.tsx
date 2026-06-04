@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import VoiceButton from './components/VoiceButton';
 import './App.css'
+import FoodResultCard from './components/FoodResultCard';
 
 function App() {
   const [transcript, setTranscript] = useState<string>('');
   const [isListening, setIsListening] = useState<boolean>(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const MIN_TEXTAREA_HEIGHT: number = 40;
 
   function startListening(): void {
     if (recognitionRef.current) return;
@@ -64,25 +66,54 @@ function App() {
     }
   }
 
-  function handleTranscriptChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    setTranscript(event.target.value);
+  function handleTranscriptChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
+    const textarea = event.target;
+
+    textarea.style.height =`${MIN_TEXTAREA_HEIGHT}px`;
+    textarea.style.height = `${Math.max(
+      textarea.scrollHeight,
+      MIN_TEXTAREA_HEIGHT
+    )}px`;
+
+    setTranscript(textarea.value);
   }
 
   return (
-    <div className='test'>
+    <div className='app-container'>
       <h1 className='heading-interface'>Food Facts VUI</h1>
+
+      {/* For rendering searched foods */}
+      <section>
+        <FoodResultCard
+          product={{
+            code: '11fedfsadaf',
+            product_name: 'Nutella',
+            brands: 'Nutella, Yum yum',
+            image_front_url: 'https://images.openfoodfacts.org/images/products/000/008/017/6800/front_en.273.400.jpg',
+            ingredients_text: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7,4%, LAIT écrémé en poudre 6,6%, LACTOSERUM en poudre, émulsifiants: lécithines [SOJA), vanilline. Sans gluten.',
+            nutriments: {
+              'energy-kcal_100g': 539,
+              sugars_100g: 56.3,
+              fat_100g: undefined,
+              proteins_100g: undefined,
+            },
+            nutriscore_grade: 'e'
+          }}
+        />
+      </section>
+
+      {/* For rendering compared results */}
+
 
       <VoiceButton isListening={isListening} onClick={toggleListening} />
 
       <section id='transcript-section'>
-        <h2 style={{marginTop: '0'}}>Transcript</h2>
-        <input
+        <textarea
           className='voice-input-field'
-          type='text'
           value={transcript}
           placeholder='Ask me something...'
           onChange={handleTranscriptChange}
-        />
+        ></textarea>
       </section>
     </div>
   )

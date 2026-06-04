@@ -22,21 +22,26 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
+    width: var(--voice-button-size);
+    max-width: var(--voice-button-size_max);
     height: var(--voice-button-size);
     max-height: var(--voice-button-size_max);
+
     display: grid;
     justify-items: center;
     align-items: center;
+
+    transition: 1s;
 
     .orb-1,
     .orb-2,
     .orb-3 {
         grid-area: 1/1;
 
-        width: var(--voice-button-size);
-        max-width: var(--voice-button-size_max);
-        height: var(--voice-button-size);
-        max-height: var(--voice-button-size_max);
+        width: inherit;
+        max-width: inherit;
+        height: inherit;
+        max-height: inherit;
 
         filter: blur(10px);
         mix-blend-mode: screen;
@@ -71,6 +76,17 @@
 
         z-index: 2;
     }
+    
+    &.showing-results {
+        top: 83.2%;
+
+        width: 100px;
+        max-width: 100px;
+        height: 100px;
+        max-height: 100px;
+
+        transition: 1s;
+    }
 }
 
 @keyframes rotate {
@@ -85,17 +101,16 @@
     }
 }
 
-
 button {
     &#speak-button {
         grid-area: 1/1;
 
         padding: 0;
 
-        width: var(--voice-button-size);
-        max-width: var(--voice-button-size_max);
-        height: var(--voice-button-size);
-        max-height: var(--voice-button-size_max);
+        width: inherit;
+        max-width: inherit;
+        height: inherit;
+        max-height: inherit;
 
         border: 1px solid rgba(0, 0, 0, 0); /* prevents darker color from background elem and box-shadow */
         border-radius: 50%;

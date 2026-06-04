@@ -1,16 +1,21 @@
 FoodFacts/
-    - file_structure/
-        - structure.txt
-        
     - node_modules/
+        - ...
     - public/
+    - server/
+        - index.ts
     - src/
-        - types/
-            - speach.d.ts
+        - api/
+            - foodApi.ts
         - assests/
         - components/
-            - VoiceButton.tsx
+            - FoodResultCard.css
+            - FoodResultCard.tsx
             - VoiceButton.css
+            - VoiceButton.tsx
+        - types/
+            - food.ts
+            - speech.d.ts
             
         - App.css
         - App.tsx
@@ -22,6 +27,7 @@ FoodFacts/
     - index.html
     - package-lock.json
     - README.md
+    - structure.txt
     - tsconfig.app.json
     - tsconfig.json
     - tsconfig.node.json
