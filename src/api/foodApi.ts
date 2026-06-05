@@ -4,7 +4,7 @@ import type { FoodSearchResponse } from '../types/food';
 
 export async function searchFood(query: string): Promise<FoodSearchResponse> {
     try {
-        const response: AxiosResponse = await axios.get<FoodSearchResponse>(
+        const response: AxiosResponse<FoodSearchResponse> = await axios.get<FoodSearchResponse>(
             'http://localhost:3001/api/search',
             {
                 params: {
@@ -14,11 +14,11 @@ export async function searchFood(query: string): Promise<FoodSearchResponse> {
         );
     
         return response.data
-    } catch (error) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            throw new Error(error.response?.data.error || 'Failed to search food. ');
+            throw new Error(error.response?.data?.error || 'Failed to search food. ', { cause: error });
         };
 
-        throw new Error('Unexpected food search error. ');
+        throw new Error('Unexpected food search error. ', { cause: error });
     }
 }

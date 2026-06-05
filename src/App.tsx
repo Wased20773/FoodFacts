@@ -10,16 +10,20 @@ function App() {
   const [transcript, setTranscript] = useState<string>('');
   const latestTranscriptRef = useRef<string>('');
   const [isListening, setIsListening] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showResults, setShowResults] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
-  // for textarea height adjustment
+  // For textarea height adjustment
   const MIN_TEXTAREA_HEIGHT: number = 40;
 
   async function handleVoiceCommand(command: string) {
     const detected = detectIntent(command);
+    setShowResults(false);
+    setIsLoading(true);
 
     try {
       switch (detected.intent) {
@@ -42,6 +46,8 @@ function App() {
           setSelectedProduct(product);
           setSecondProduct(null);
           setResponseMessage(`I found ${product.product_name}. `);
+          setIsLoading(false);
+          setShowResults(true);
           break;
         }
   
@@ -73,6 +79,8 @@ function App() {
           }
   
           setResponseMessage(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams. `);
+          setIsLoading(false);
+          setShowResults(true);
           break;
         }
   
@@ -99,6 +107,8 @@ function App() {
           setSelectedProduct(firstProduct);
           setSecondProduct(comparedProduct);
           setResponseMessage(`Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}.`);
+          setIsLoading(false);
+          setShowResults(true);
           break;
         }
   
@@ -106,6 +116,8 @@ function App() {
           setResponseMessage(
             'Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices.'
           );
+          setIsLoading(false);
+          setShowResults(true);
           break;
         }
       }
@@ -243,7 +255,7 @@ function App() {
       <h1 className='heading-interface'>Food Facts VUI</h1>
 
       {/* For rendering searched foods */}
-      <section className='result-section'>
+      <section className={`result-section ${showResults ? 'loading-results' : ''}`}>
         <FoodResultCard
           product={selectedProduct}
         />
@@ -252,7 +264,7 @@ function App() {
       {/* For rendering compared results */}
 
 
-      <VoiceButton isListening={isListening} onClick={toggleListening} />
+      <VoiceButton isListening={isListening} showResults={showResults} onClick={toggleListening} />
 
       <section id='transcript-section'>
         <input

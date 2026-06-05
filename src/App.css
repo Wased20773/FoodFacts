@@ -7,6 +7,7 @@
 }
 
 .heading-interface {
+    grid-area: 1/1;
     height: 100%;
     margin-top: 0;
     margin-bottom: 0;
@@ -17,13 +18,26 @@
 }
 
 .result-section {
+    grid-area: 2/1;
+    transform: scale(1);
     height: 100%;
     width: 100%;
+    display: none;
+
+    transition: 0.5s;
+}
+
+.result-section.loading-results {
+    transition: 0.5s;
+    grid-area: 2/1;
     display: flex;
     justify-content: center;
+    transform: scale(1);
 }
 
 #transcript-section {
+    grid-area: 4/1;
+
     color: white;
     
     width: 95%;
