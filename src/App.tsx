@@ -14,12 +14,12 @@ function App() {
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  
+  // for textarea height adjustment
   const MIN_TEXTAREA_HEIGHT: number = 40;
 
   async function handleVoiceCommand(command: string) {
     const detected = detectIntent(command);
-
-    console.log('Detected intent: ', detected);
 
     try {
       switch (detected.intent) {
@@ -203,7 +203,6 @@ function App() {
       recognitionRef.current = null;
       setIsListening(false);
       if (latestTranscriptRef.current) {
-        console.log(latestTranscriptRef.current)
         handleVoiceCommand(latestTranscriptRef.current);
       }
     };
