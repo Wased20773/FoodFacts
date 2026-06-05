@@ -53,9 +53,32 @@ app.get('/api/search', async (req: Request, res: Response): Promise<void> => {
     
         res.json({ products });
     } catch (error: unknown) {
-        console.error('Open Food Facts proxy error:', error);
+        if (axios.isAxiosError(error)) {
+            const status = error.response?.status ?? 500;
+
+            console.error('Open Food Facts proxy error: ', {
+                status,
+                message: error.message,
+                url: error.config?.url,
+                params: error.config?.params,
+            });
+
+            if (status === 503) {
+                res.status(503).json({
+                    error: 'Open Food Facts is temporarily unavailable. Please try again later. ',
+                });
+                return;
+            }
+
+            res.status(status).json({
+                error: 'Failed to fetch food data from Open Food Facts. ',
+            });
+            return;
+        }
+
+        console.error('Unexpected server error:', error);
         res.status(500).json({
-            error: 'Server failed to fetch food data.',
+            error: 'Unexpected server error.',
         });
     }
 });

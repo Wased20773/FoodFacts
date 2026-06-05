@@ -10,9 +10,6 @@ export type NutrientSlot =
     | 'protein'
     | 'salt'
     | 'sodium'
-    | 'ingredients'
-    | 'nutriscore'
-    | 'nutri-score';
 
 /**
  * Slot collection used by intents.
@@ -33,7 +30,4 @@ export const nutrientSlotValues: NutrientSlot[] = [
     'protein',
     'salt',
     'sodium',
-    'ingredients',
-    'nutriscore',
-    'nutri-score',
 ];

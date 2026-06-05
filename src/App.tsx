@@ -1,13 +1,164 @@
 import { useRef, useState } from 'react';
 import VoiceButton from './components/VoiceButton';
-import './App.css'
 import FoodResultCard from './components/FoodResultCard';
+import { detectIntent } from './utils/intentDetector';
+import { searchFood } from './api/foodApi';
+import type { FoodProduct } from './types/food';
+import './App.css'
 
 function App() {
   const [transcript, setTranscript] = useState<string>('');
+  const latestTranscriptRef = useRef<string>('');
   const [isListening, setIsListening] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
+  const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
+  const [responseMessage, setResponseMessage] = useState<string>('');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const MIN_TEXTAREA_HEIGHT: number = 40;
+
+  async function handleVoiceCommand(command: string) {
+    const detected = detectIntent(command);
+
+    console.log('Detected intent: ', detected);
+
+    try {
+      switch (detected.intent) {
+        case 'SearchFoodIntent': {
+          const productName = detected.slots.productName;
+  
+          if (!productName) {
+            setResponseMessage('Please say a product name. ');
+            return;
+          }
+  
+          const data = await searchFood(productName);
+          const product = data.products[0];
+  
+          if (!product) {
+            setResponseMessage(`I could not find ${productName}. `);
+            return;
+          }
+  
+          setSelectedProduct(product);
+          setSecondProduct(null);
+          setResponseMessage(`I found ${product.product_name}. `);
+          break;
+        }
+  
+        case 'ProductNutritionIntent': {
+          const productName = detected.slots.productName;
+          const nutrient = detected.slots.nutrient;
+  
+          if (!productName || !nutrient) {
+            setResponseMessage('Please say a product and nutrient. ');
+            return;
+          }
+  
+          const data = await searchFood(productName);
+          const product = data.products[0];
+  
+          if (!product) {
+            setResponseMessage(`I could not find ${productName}. `);
+            return;
+          }
+  
+          setSelectedProduct(product);
+          setSecondProduct(null);
+  
+          const value = getNutrientValue(product, nutrient);
+  
+          if (value === undefined || value === null) {
+            setResponseMessage(`I could not find ${nutrient} information for ${product.product_name}. `);
+            return;
+          }
+  
+          setResponseMessage(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams. `);
+          break;
+        }
+  
+        case 'CompareProductsIntent': {
+          const productName = detected.slots.productName;
+          const secondProductName = detected.slots.secondProductName;
+  
+          if (!productName || !secondProductName) {
+            setResponseMessage('Please say two products to compare.');
+            return;
+          }
+  
+          const firstData = await searchFood(productName);
+          const secondData = await searchFood(secondProductName);
+  
+          const firstProduct = firstData.products[0];
+          const comparedProduct = secondData.products[0];
+  
+          if (!firstProduct || !comparedProduct) {
+            setResponseMessage('I could not find one of the products.');
+            return;
+          }
+  
+          setSelectedProduct(firstProduct);
+          setSecondProduct(comparedProduct);
+          setResponseMessage(`Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}.`);
+          break;
+        }
+  
+        case 'UnknownIntent': {
+          setResponseMessage(
+            'Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices.'
+          );
+          break;
+        }
+      }
+    } catch (error) {
+      console.error('Voice command error:', error);
+
+      setSelectedProduct(null);
+      setSecondProduct(null);
+
+      if (error instanceof Error) {
+        setResponseMessage(error.message);
+      }
+
+      setResponseMessage('The Open Food Facts database is currently unavailable. ');
+    }
+  }
+
+  function getNutrientValue(product: FoodProduct, nutrient: string): number | undefined {
+    switch (nutrient) {
+      case 'calories':
+        return product.nutriments?.['energy-kcal_100g'];
+
+      case 'sugar':
+        return product.nutriments?.sugars_100g;
+
+      case 'fat':
+        return product.nutriments?.fat_100g;
+
+      case 'protein':
+        return product.nutriments?.proteins_100g;
+
+      case 'salt':
+        return product.nutriments?.salt_100g;
+
+      case 'sodium':
+        return product.nutriments?.sodium_100g;
+
+      default:
+        return undefined;
+    }
+  }
+
+  function getNutientUnit(nutrient: string): string {
+    if (nutrient === 'calories') {
+      return 'kcal';
+    }
+
+    if (nutrient === 'nutriscore' || nutrient === 'nutri-score') {
+      return '';
+    }
+
+    return 'grams';
+  }
 
   function startListening(): void {
     if (recognitionRef.current) return;
@@ -27,6 +178,8 @@ function App() {
     recognition.continuous = true;
     recognition.interimResults = true;
 
+    latestTranscriptRef.current = '';
+
     recognition.onstart = (): void => {
       setIsListening(true);
     };
@@ -38,7 +191,8 @@ function App() {
         text += event.results[i][0].transcript;
       }
 
-      setTranscript(text);
+      latestTranscriptRef.current = text.trim();
+      setTranscript(text.trim());
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent): void => {
@@ -48,6 +202,10 @@ function App() {
     recognition.onend = (): void => {
       recognitionRef.current = null;
       setIsListening(false);
+      if (latestTranscriptRef.current) {
+        console.log(latestTranscriptRef.current)
+        handleVoiceCommand(latestTranscriptRef.current);
+      }
     };
 
     recognitionRef.current = recognition;
@@ -66,16 +224,19 @@ function App() {
     }
   }
 
-  function handleTranscriptChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
-    const textarea = event.target;
+  function handleTranscriptChange(value: string): void {
+    // Below is used for textarea to grow its height upward 
+    // const textarea = event.target;
 
-    textarea.style.height =`${MIN_TEXTAREA_HEIGHT}px`;
-    textarea.style.height = `${Math.max(
-      textarea.scrollHeight,
-      MIN_TEXTAREA_HEIGHT
-    )}px`;
+    // textarea.style.height =`${MIN_TEXTAREA_HEIGHT}px`;
+    // textarea.style.height = `${Math.max(
+    //   textarea.scrollHeight,
+    //   MIN_TEXTAREA_HEIGHT
+    // )}px`;
+    // 
+    // setTranscript(textarea.value);
 
-    setTranscript(textarea.value);
+    setTranscript(value);
   }
 
   return (
@@ -85,7 +246,37 @@ function App() {
       {/* For rendering searched foods */}
       <section className='result-section'>
         <FoodResultCard
-          product={{
+          product={selectedProduct}
+        />
+      </section>
+
+      {/* For rendering compared results */}
+
+
+      <VoiceButton isListening={isListening} onClick={toggleListening} />
+
+      <section id='transcript-section'>
+        <input
+          className='voice-input-field'
+          type='text'
+          value={transcript}
+          placeholder='Ask me something...'
+          onChange={(event) => handleTranscriptChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleVoiceCommand(transcript);
+            }
+          }}
+        />
+      </section>
+    </div>
+  )
+}
+
+export default App
+
+/*
+{
             code: '3017620422003',
             product_name: 'Nutella',
             brands: 'Nutella, Yum yum',
@@ -98,25 +289,5 @@ function App() {
               proteins_100g: undefined,
             },
             nutriscore_grade: 'e'
-          }}
-        />
-      </section>
-
-      {/* For rendering compared results */}
-
-
-      <VoiceButton isListening={isListening} onClick={toggleListening} />
-
-      <section id='transcript-section'>
-        <textarea
-          className='voice-input-field'
-          value={transcript}
-          placeholder='Ask me something...'
-          onChange={handleTranscriptChange}
-        ></textarea>
-      </section>
-    </div>
-  )
-}
-
-export default App
+          }
+*/
