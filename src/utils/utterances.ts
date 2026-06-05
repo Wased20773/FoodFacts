@@ -14,7 +14,7 @@ export const searchFoodUtterances = [
   /tell me about (.+)/,
   /what is the product (.+)/,
   /open (.+)/,
-  /scan for (.+)/,
+  /give me (.+)/,
   /pull up (.+)/,
 ];
 

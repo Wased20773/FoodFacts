@@ -6,14 +6,18 @@ type Props = {
 
 export default function FoodResultCard({ product }: Props): React.JSX.Element {
     return (
-        <article className='food-result-card' style={{color: 'white'}}>
+        <article className='food-result-card'>
             {/* Image */}
             <img className='product-image' src={product?.image_front_url} width={300}/>
             
             {/* Product Details */}
             <div>
-                <h3 style={{marginBottom: 0}}>{product?.product_name}</h3>
-                <p style={{marginTop: 0}}>{product?.brands}</p>
+                <div className='product-heading'>
+                    <h3 className='product-name'>{product?.product_name || 'N/A' }</h3>
+                    <p className='product-brand'>
+                        {product?.brands}
+                    </p>
+                </div>
 
                 {/* Ingredients */}
                 <div>
@@ -39,6 +43,14 @@ export default function FoodResultCard({ product }: Props): React.JSX.Element {
 
                         <li>
                             Protein: { product?.nutriments?.proteins_100g ?? 'N/A' } g
+                        </li>
+
+                        <li>
+                            Salt: { product?.nutriments?.salt_100g ?? 'N/A' } g
+                        </li>
+
+                        <li>
+                            Sodium: { product?.nutriments?.sodium_100g ?? 'N/A' } g
                         </li>
                     </ul>
                 </div>
