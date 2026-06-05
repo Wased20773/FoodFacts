@@ -3,12 +3,13 @@ import './VoiceButton.css'
 type VoiceButtonProps = {
   isListening: boolean;
   onClick: () => void;
+  loading: boolean;
   showResults: boolean;
 }
 
-export default function VoiceButton({ isListening, showResults, onClick }: VoiceButtonProps): React.JSX.Element {
+export default function VoiceButton({ isListening, loading, showResults, onClick }: VoiceButtonProps): React.JSX.Element {
   return (
-    <div className={`speak-button-container ${showResults ? 'loading-results' : ''}`}>
+    <div className={`speak-button-container ${loading || showResults ? 'loading-results' : ''}`}>
       {/* Orbs */}
       <div
         className={`orb-1 ${isListening ? 'active' : ''}`}

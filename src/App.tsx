@@ -5,6 +5,7 @@ import { detectIntent } from './utils/intentDetector';
 import { searchFood } from './api/foodApi';
 import type { FoodProduct } from './types/food';
 import './App.css'
+import Loading from './components/Loading';
 
 function App() {
   const [transcript, setTranscript] = useState<string>('');
@@ -18,7 +19,7 @@ function App() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
   // For textarea height adjustment
-  const MIN_TEXTAREA_HEIGHT: number = 40;
+  // const MIN_TEXTAREA_HEIGHT: number = 40;
 
   async function handleVoiceCommand(command: string) {
     const detected = detectIntent(command);
@@ -123,6 +124,7 @@ function App() {
       }
     } catch (error) {
       console.error('Voice command error:', error);
+      setIsLoading(false);
 
       setSelectedProduct(null);
       setSecondProduct(null);
@@ -254,17 +256,21 @@ function App() {
     <div className='app-container'>
       <h1 className='heading-interface'>Food Facts VUI</h1>
 
-      {/* For rendering searched foods */}
-      <section className={`result-section ${showResults ? 'loading-results' : ''}`}>
-        <FoodResultCard
-          product={selectedProduct}
-        />
-      </section>
+      {/* Loading View */}
+      {isLoading ? 
+        <Loading/>
+      : 
+        /* For rendering searched foods */
+        <section className={`result-section ${showResults ? 'loading-results' : ''}`}>
+          <FoodResultCard
+            product={selectedProduct}
+          />
+        </section>
+      }
 
       {/* For rendering compared results */}
 
-
-      <VoiceButton isListening={isListening} showResults={showResults} onClick={toggleListening} />
+      <VoiceButton isListening={isListening} loading={isLoading} showResults={showResults} onClick={toggleListening} />
 
       <section id='transcript-section'>
         <input

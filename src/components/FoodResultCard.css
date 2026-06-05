@@ -8,8 +8,9 @@
     
     max-height: fit-content;
 
-    border: 1px solid white;
+    border: 3px solid rgb(51, 51, 51);
     border-radius: 0.50cm;
+    background: rgb(27, 27, 27);
 
     overflow-y: auto;
 }
