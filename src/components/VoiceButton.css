@@ -1,5 +1,6 @@
 :root {
     --voice-button-size: 60vw;
+    --voice-button-size_min: 200px;
     --voice-button-size_max: 500px;
 
     --orb-color-1:  radial-gradient(
@@ -15,20 +16,13 @@
 }
 
 .speak-button-container {
-    position: absolute;
-
-    /* below keeps the container absolutly centered in the viewport */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: var(--voice-button-size);
+    width: clamp(100px, 20vh, 200px);
     max-width: var(--voice-button-size_max);
-    height: var(--voice-button-size);
+    height: clamp(100px, 20vh, 200px);
     max-height: var(--voice-button-size_max);
 
     display: grid;
-    justify-items: center;
+    justify-content: center;
     align-items: center;
 
     transition: 1s;
@@ -78,8 +72,6 @@
     }
     
     &.showing-results {
-        top: 83.2%;
-
         width: 100px;
         max-width: 100px;
         height: 100px;

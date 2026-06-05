@@ -16,6 +16,10 @@ FoodFacts/
         - types/
             - food.ts
             - speech.d.ts
+        - utils/
+            - intentDetector.ts
+            - slots.ts
+            - utterances.ts
             
         - App.css
         - App.tsx

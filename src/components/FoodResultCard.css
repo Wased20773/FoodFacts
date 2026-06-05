@@ -1,17 +1,13 @@
 .food-result-card {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 10vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 50px;
 
     padding: 10px 20px;
     margin: 0 40px 0 40px;
-    min-height: 50vh;
-    max-height: 65vh;
     
+    max-height: fit-content;
+
     border: 1px solid white;
     border-radius: 0.50cm;
 

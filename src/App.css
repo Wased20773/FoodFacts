@@ -1,24 +1,37 @@
-#transcript-section {
-    color: white;
-
-    margin: 0 20px 10px 20px;
-
-    max-height: 10vh; /* 10% screen */
+.app-container {
+    display: grid;
+    grid-template-rows: 5vh 60vh 25vh 10vh;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
 }
 
 .heading-interface {
+    height: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     color: rgb(214, 214, 214);
-    height: 5vh; /* 5% screen */
 }
 
-.app-container {
-    height: 100vh; /* 100% screen */
+.result-section {
+    height: 100%;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content:space-between;
+    justify-content: center;
+}
+
+#transcript-section {
+    color: white;
+    
+    width: 95%;
+    height: 80%;
+
+    display: flex;
+    justify-content: center;
+    align-items: end;
 }
 
 .voice-input-field {
@@ -29,7 +42,6 @@
     max-height: 100%;
 
     padding: 9px 15px;
-
     resize: none;
     overflow-y: auto;
     box-sizing: border-box;

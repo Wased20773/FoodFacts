@@ -83,13 +83,13 @@ function App() {
       <h1 className='heading-interface'>Food Facts VUI</h1>
 
       {/* For rendering searched foods */}
-      <section>
+      <section className='result-section'>
         <FoodResultCard
           product={{
-            code: '11fedfsadaf',
+            code: '3017620422003',
             product_name: 'Nutella',
             brands: 'Nutella, Yum yum',
-            image_front_url: 'https://images.openfoodfacts.org/images/products/000/008/017/6800/front_en.273.400.jpg',
+            image_front_url: 'https://images.openfoodfacts.org/images/products/500/016/803/6991/front_en.32.400.jpg',
             ingredients_text: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7,4%, LAIT écrémé en poudre 6,6%, LACTOSERUM en poudre, émulsifiants: lécithines [SOJA), vanilline. Sans gluten.',
             nutriments: {
               'energy-kcal_100g': 539,

@@ -7,7 +7,7 @@ type VoiceButtonProps = {
 
 export default function VoiceButton({ isListening, onClick }: VoiceButtonProps): React.JSX.Element {
   return (
-    <div className='speak-button-container showing-results'>
+    <div className='speak-button-container'>
       {/* Orbs */}
       <div
         className={`orb-1 ${isListening ? 'active' : ''}`}
