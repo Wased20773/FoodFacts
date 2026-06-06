@@ -1,11 +1,44 @@
-import type { FoodProduct } from '../types/food';
+import type { FoodProduct, Nutriments } from '../types/food';
 import './FoodResultCard.css'
 type Props = {
     product: FoodProduct | null;
+    compareProduct?: FoodProduct;
     side?: 'left' | 'right';
 };
 
-export default function FoodResultCard({ product, side }: Props): React.JSX.Element {
+export default function FoodResultCard({ product, compareProduct, side }: Props): React.JSX.Element {
+    function compareProducts(nutriment: keyof Nutriments): string {
+        if (!compareProduct) return '';
+        
+        const firstNutriment = product?.nutriments?.[`${nutriment}`] || 0;
+        const secondNutriment = compareProduct.nutriments?.[`${nutriment}`] || 0;
+
+        if (firstNutriment === secondNutriment) return 'product-equal-nutriment'
+
+        if (firstNutriment < secondNutriment) {
+            if (nutriment === 'proteins_100g') return 'product-poor-nutriment';
+            return 'product-healthier-nutriment';
+        }
+        if (nutriment === 'proteins_100g') return 'product-healthier-nutriment';
+        return 'product-poor-nutriment';
+    }
+
+    function compareNutriscore(): string {
+        if (!compareProduct) return '';
+
+        const firstScore = product?.nutriscore_grade?.toLowerCase() || 'z';
+        const secondScore = compareProduct?.nutriscore_grade?.toLowerCase() || 'z';
+
+        if (firstScore === secondScore) return 'product-equal-nutriment'
+        if (firstScore !== 'not-applicable' && secondScore == 'not-applicable') return ''
+        if (firstScore === 'not-applicable') return ''
+        if (firstScore < secondScore) {
+            return 'product-healthier-nutriment';
+        }
+
+        return 'product-poor-nutriment';
+    }
+    
     return (
         <article className='food-result-card' style={side ? side === 'left' ? {marginRight: 0} : {marginLeft: 0} : undefined}>
             {/* Image */}
@@ -30,34 +63,34 @@ export default function FoodResultCard({ product, side }: Props): React.JSX.Elem
                 <div>
                     <h4 style={{marginBottom: 0}}>Nutriments</h4>
                     <ul style={{marginTop: 0}}>
-                        <li>
+                        <li className={compareProducts('energy-kcal_100g')}>
                             Calories: { product?.nutriments?.['energy-kcal_100g'] ?? 'N/A' }
                         </li>
 
-                        <li>
+                        <li className={compareProducts('sugars_100g')}>
                             Sugar: { product?.nutriments?.sugars_100g ?? 'N/A' } g
                         </li>
 
-                        <li>
+                        <li className={compareProducts('fat_100g')}>
                             Fat: { product?.nutriments?.fat_100g ?? 'N/A' } g
                         </li>
 
-                        <li>
+                        <li className={compareProducts('proteins_100g')}>
                             Protein: { product?.nutriments?.proteins_100g ?? 'N/A' } g
                         </li>
 
-                        <li>
+                        <li className={compareProducts('salt_100g')}>
                             Salt: { product?.nutriments?.salt_100g ?? 'N/A' } g
                         </li>
 
-                        <li>
+                        <li className={compareProducts('sodium_100g')}>
                             Sodium: { product?.nutriments?.sodium_100g ?? 'N/A' } g
                         </li>
                     </ul>
                 </div>
 
                 {/* Nutriscore Grade */}
-                <p>Nutriscore Grade: {product?.nutriscore_grade}</p>
+                <p className={compareNutriscore()}>Nutriscore Grade: {product?.nutriscore_grade}</p>
             </div>
         </article>
     )

@@ -38,3 +38,15 @@
     font-style: italic;
     margin-top: 0;
 }
+
+.product-healthier-nutriment {
+    color: rgb(141, 236, 112);
+}
+
+.product-poor-nutriment {
+    color: rgb(236, 112, 112);
+}
+
+.product-equal-nutriment {
+    color: rgb(236, 207, 112);
+}
