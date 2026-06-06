@@ -1,3 +1,19 @@
-.compare-results-card {
+.compare-results-section {
+    grid-area: 2 / 1;
     display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.compare-first-product,
+.compare-second-product {
+  min-height: 0;
+  height: 100%;
+}
+
+.compare-first-product {
+    justify-self: end;
 }

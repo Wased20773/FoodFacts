@@ -2,11 +2,12 @@ import type { FoodProduct } from '../types/food';
 import './FoodResultCard.css'
 type Props = {
     product: FoodProduct | null;
+    side?: 'left' | 'right';
 };
 
-export default function FoodResultCard({ product }: Props): React.JSX.Element {
+export default function FoodResultCard({ product, side }: Props): React.JSX.Element {
     return (
-        <article className='food-result-card'>
+        <article className='food-result-card' style={side ? side === 'left' ? {marginRight: 0} : {marginLeft: 0} : undefined}>
             {/* Image */}
             <img className='product-image' src={product?.image_front_url} width={300}/>
             

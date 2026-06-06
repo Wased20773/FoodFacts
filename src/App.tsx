@@ -6,6 +6,8 @@ import { searchFood } from './api/foodApi';
 import type { FoodProduct } from './types/food';
 import './App.css'
 import Loading from './components/Loading';
+import CompareResultsCard from './components/CompareResultsCard';
+import MessageToast from './components/MessageToast';
 
 function App() {
   const [transcript, setTranscript] = useState<string>('');
@@ -16,6 +18,7 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
+  const [isError, setIsError] = useState<boolean>(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
   // For textarea height adjustment
@@ -257,16 +260,24 @@ function App() {
       <h1 className='heading-interface'>Food Facts VUI</h1>
 
       {/* Loading View */}
-      {isLoading ? 
+      {isLoading ?  (
         <Loading/>
-      : 
-        /* For rendering searched foods */
+      ) : selectedProduct && secondProduct ? (
+        /* Compare Foods */
+        <CompareResultsCard firstProdcut={selectedProduct} secondProduct={secondProduct}/>
+      ) : (
+        /* Searched foods */
         <section className={`result-section ${showResults ? 'loading-results' : ''}`}>
           <FoodResultCard
             product={selectedProduct}
           />
         </section>
-      }
+      )}
+
+      {/* Error */}
+      {responseMessage && (
+        <MessageToast message={responseMessage}/>
+      )}
 
       {/* For rendering compared results */}
 

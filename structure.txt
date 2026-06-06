@@ -9,9 +9,12 @@ FoodFacts/
             - foodApi.ts
         - assests/
         - components/
+            - CompareResultsCard.css
             - CompareResultsCard.tsx
             - FoodResultCard.css
             - FoodResultCard.tsx
+            - MessageToast.css
+            - MessageToast.tsx
             - VoiceButton.css
             - VoiceButton.tsx
         - types/

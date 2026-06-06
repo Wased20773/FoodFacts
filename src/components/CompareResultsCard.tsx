@@ -1,6 +1,6 @@
 import type { FoodProduct } from '../types/food'
-import { FoodResultCard } from './FoodResultCard'
-
+import FoodResultCard from './FoodResultCard'
+import './CompareResultsCard.css'
 type Props = {
     firstProdcut: FoodProduct;
     secondProduct: FoodProduct;
@@ -8,10 +8,13 @@ type Props = {
 
 export default function CompareResultsCard({firstProdcut, secondProduct}: Props): React.JSX.Element {
     return (
-        <div className='compare-results-card'>
-            <FoodResultCard product={firstProdcut} />
-
-            <FoodResultCard product={secondProduct} />
-        </div>
+        <section className='compare-results-section'>
+            <div className='compare-first-product'>
+                <FoodResultCard product={firstProdcut} side='left'/>
+            </div>
+            <div className='compare-second-product'>
+                <FoodResultCard product={secondProduct} side='right'/>
+            </div>
+        </section>
     )
 }

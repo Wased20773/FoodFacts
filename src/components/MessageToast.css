@@ -1,0 +1,40 @@
+.message-toast-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+    color: white;
+
+    border-radius: 0.25cm;
+    transform: translateY(-100%);
+
+    animation: toast 8s ease-in-out;
+}
+
+@keyframes toast {
+    0% {
+        transform: translateY(-100%);
+    }
+    20% {
+        transform: translateY(20%);
+    }
+    80% {
+        transform: translateY(20%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+.message-toast {
+    background: rgb(255, 80, 80);
+    border: 2px solid rgb(255, 109, 109);
+    border-radius: 0.25cm;
+    padding: 5px 8px;
+    width: fit-content;
+}
