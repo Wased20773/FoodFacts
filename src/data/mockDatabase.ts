@@ -36,7 +36,7 @@ export const mockDatabase: Record<string, FoodProduct> = {
     'greek yogurt': mockGreekYogurt,
     'protein bar': mockProteinBar,
     'lay\'s potato chips': mockPotatoChips,
-    'Whole ultra filtered milk': mockWholeMilk,
+    'whole ultra filtered milk': mockWholeMilk,
     'cheerios': mockCheerios,
     'boneless skinless chicken breast': mockChickenBreast,
 } satisfies Record<string, FoodProduct>;
