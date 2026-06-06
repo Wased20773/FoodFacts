@@ -8,6 +8,7 @@ import './App.css'
 import Loading from './components/Loading';
 import CompareResultsCard from './components/CompareResultsCard';
 import MessageToast from './components/MessageToast';
+import type { Toast } from './types/toast';
 
 function App() {
   const [transcript, setTranscript] = useState<string>('');
@@ -19,6 +20,7 @@ function App() {
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
+  const [toasts, setToasts] = useState<Toast[]>([]);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
   // For textarea height adjustment
@@ -137,6 +139,7 @@ function App() {
       }
 
       setResponseMessage('The Open Food Facts database is currently unavailable. ');
+      addToast('The Open Food Facts database is currently unavailable. ');
     }
   }
 
@@ -255,6 +258,16 @@ function App() {
     setTranscript(value);
   }
 
+  function addToast(message: string): void {
+    const id = Date.now();
+
+    setToasts(prev => [ ...prev, { id, message } ]);
+
+    setTimeout(() => {
+      setToasts(prev => prev.filter(toast => toast.id !== id));
+    }, 8000);
+  }
+
   return (
     <div className='app-container'>
       <h1 className='heading-interface'>Food Facts VUI</h1>
@@ -274,11 +287,13 @@ function App() {
         </section>
       )}
 
-      {/* Error */}
-      {responseMessage && (
-        <MessageToast message={responseMessage}/>
-      )}
-
+      {/* Toast */}
+      <div className='toast-stack'>
+        {toasts.map(toast => (
+          <MessageToast key={toast.id} message={toast.message} />
+        ))}
+      </div>
+      
       {/* For rendering compared results */}
 
       <VoiceButton isListening={isListening} loading={isLoading} showResults={showResults} onClick={toggleListening} />

@@ -1,40 +1,50 @@
-.message-toast-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+.toast-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 
-    display: flex;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 
-    text-align: center;
-    color: white;
-
-    border-radius: 0.25cm;
-    transform: translateY(-100%);
-
-    animation: toast 8s ease-in-out;
+  z-index: 100;
+  pointer-events: none;
 }
 
-@keyframes toast {
-    0% {
-        transform: translateY(-100%);
-    }
-    20% {
-        transform: translateY(20%);
-    }
-    80% {
-        transform: translateY(20%);
-    }
-    100% {
-        transform: translateY(-100%);
-    }
+.message-toast-container {
+  display: flex;
+  justify-content: center;
+
+  text-align: center;
+  color: white;
+
+  animation: toast 8s ease-in-out forwards;
 }
 
 .message-toast {
-    background: rgb(255, 80, 80);
-    border: 2px solid rgb(255, 109, 109);
-    border-radius: 0.25cm;
-    padding: 5px 8px;
-    width: fit-content;
+  background: rgb(255, 80, 80);
+  border: 2px solid rgb(255, 109, 109);
+  border-radius: 0.25cm;
+  padding: 5px 8px;
+  width: fit-content;
+}
+
+@keyframes toast {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  10% {
+    transform: translateY(20px);
+  }
+
+  90% {
+    transform: translateY(20px);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
 }
