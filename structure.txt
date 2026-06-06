@@ -1,13 +1,18 @@
 FoodFacts/
     - node_modules/
         - ...
+
     - public/
+
     - server/
         - index.ts
+
     - src/
         - api/
             - foodApi.ts
+            
         - assests/
+
         - components/
             - CompareResultsCard.css
             - CompareResultsCard.tsx
@@ -26,7 +31,7 @@ FoodFacts/
             - food.ts
             - speech.d.ts
             - toast.ts
-            
+
         - utils/
             - intentDetector.ts
             - slots.ts
