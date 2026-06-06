@@ -17,10 +17,16 @@ FoodFacts/
             - MessageToast.tsx
             - VoiceButton.css
             - VoiceButton.tsx
+
+        - data/
+            - mockDatabase.ts
+            - mockProducts.ts
+
         - types/
             - food.ts
             - speech.d.ts
             - toast.ts
+            
         - utils/
             - intentDetector.ts
             - slots.ts
