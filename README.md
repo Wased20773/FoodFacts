@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+## Installs
+run the following command in your terminal window:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+`npm install`
 
-Currently, two official plugins are available:
+## How to Run
+There are two modes of the application:
+- Live API Mode
+  - This uses the Open Food Facts API
+  - Some things to consider when running this mode:
+    - The server to Open Food Facts may not become available to those with lower priority
+    - <span style="color: red">15req/min/IP for GET: IP ban</span>
+    - <span style="color: red">10req/min/IP for POST: IP ban</span>
+      - Application does not use POST
+  - **Run this mode with the following command:**
+    - `npm run dev`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Mock Data Mode
+  - Uses a mock database with 12 row entires
+  - Must use exact `product_name` to "search" for the products
+  - **Run this mode with the following command:**
+    - `npm run dev:mock`
+  - Below are all the exact product names to use for dev:mock
+    - `Nutella`
+    - `Apple Slices`
+    - `Peanut Butter`
+    - `Oreo Cookies`
+    - `Coca-Cola`
+    - `Banana`
+    - `Greek Yogurt`
+    - `Protein Bar`
+    - `Lay's Potato Chips`
+    - `Whole Ultra Filtered Milk`
+    - `Cheerios`
+    - `Boneless Skinless Chicken Breast`
+  - You can find the file in contents inside of:
+    - [src/data/mockProducts.ts](./src/data/mockProducts.ts)
+    - [src/data/mockDatabase.ts](./src/data/mockDatabase.ts)
