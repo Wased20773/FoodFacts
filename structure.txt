@@ -1,21 +1,21 @@
-food-facts-vui/
-    - node_modules/
+food-facts-vui\
+    - node_modules\
         - ...
 
-    - public/
+    - public\
 
-    - server/
+    - server\
         - index.ts
 
-    - src/
-        - api/
+    - src\
+        - api\
             - foodApi.ts
             
-        - assests/
+        - assests\
             - icon-x.png
             - icon-read-aloud.png
 
-        - components/
+        - components\
             - CompareResultsCard.css
             - CompareResultsCard.tsx
             - FoodResultCard.css
@@ -25,16 +25,16 @@ food-facts-vui/
             - VoiceButton.css
             - VoiceButton.tsx
 
-        - data/
+        - data\
             - mockDatabase.ts
             - mockProducts.ts
 
-        - types/
+        - types\
             - food.ts
             - speech.d.ts
             - toast.ts
 
-        - utils/
+        - utils\
             - intentDetector.ts
             - slots.ts
             - utterances.ts
