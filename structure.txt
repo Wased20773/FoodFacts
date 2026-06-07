@@ -1,4 +1,4 @@
-FoodFacts/
+food-facts-vui/
     - node_modules/
         - ...
 
@@ -12,6 +12,7 @@ FoodFacts/
             - foodApi.ts
             
         - assests/
+            - icon-x.png
 
         - components/
             - CompareResultsCard.css

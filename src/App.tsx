@@ -46,6 +46,7 @@ function App() {
             message += 'Please say a product name';
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -56,6 +57,7 @@ function App() {
             message += `I could not find ${productName}`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -83,6 +85,7 @@ function App() {
           speak(message);
           setIsLoading(false);
           setShowResults(true);
+          addToast(message, false);
           break;
         }
 
@@ -94,6 +97,7 @@ function App() {
             message += 'Please say a product and nutrient';
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -104,6 +108,7 @@ function App() {
             message += `I could not find ${productName}`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -116,6 +121,7 @@ function App() {
             message += `I could not find ${nutrient} information for ${product.product_name}`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -127,6 +133,7 @@ function App() {
           speak(message);
           setIsLoading(false);
           setShowResults(true);
+          addToast(message, false);
           break;
         }
 
@@ -138,6 +145,7 @@ function App() {
             message += 'Please say two products to compare';
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -151,6 +159,7 @@ function App() {
             message += `Sorry, I could not find ${productName} and ${secondProductName} as products`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -158,6 +167,7 @@ function App() {
             message += `Sorry, I could not find ${productName} as a product`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -165,6 +175,7 @@ function App() {
             message += `Sorry, I could not find ${secondProductName} as a product`;
             setResponseMessage(message);
             speak(message);
+            addToast(message, true);
             return;
           }
 
@@ -237,6 +248,7 @@ function App() {
           speak(message);
           setIsLoading(false);
           setShowResults(true);
+          addToast(message, false);
           break;
         }
 
@@ -246,6 +258,7 @@ function App() {
           speak(message);
           setIsLoading(false);
           setShowResults(true);
+          addToast(message, true);
           break;
         }
       }
@@ -260,7 +273,7 @@ function App() {
 
       setResponseMessage(message);
       speak(message);
-      addToast(message);
+      addToast(message, true);
     }
   }
 
@@ -466,9 +479,9 @@ function App() {
     const utterance = new SpeechSynthesisUtterance(message);
 
     utterance.voice = selectedVoiceRef.current;
-    utterance.lang = 'en-US';
-    utterance.rate = 0.95;
-    utterance.pitch = 1.25;
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.90;
+    utterance.pitch = 1.1;
 
     window.speechSynthesis.speak(utterance);
   }
@@ -490,7 +503,7 @@ function App() {
     function loadVoices(): void {
         const voice = window.speechSynthesis
             .getVoices()
-            .find((voice) => voice.name === 'Google UK English Male');
+            .find((voice) => voice.name === 'Google US English');
 
         selectedVoiceRef.current = voice ?? null;
     }
@@ -518,14 +531,18 @@ function App() {
     setTranscript(value);
   }
 
-  function addToast(message: string): void {
-    const id = Date.now();
+  function addToast(message: string, isError: boolean): void {
+    const id = crypto.randomUUID();
 
-    setToasts(prev => [ ...prev, { id, message } ]);
+    setToasts(prev => [ ...prev, { id, message, isError } ]);
 
-    setTimeout(() => {
-      setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 8000);
+    if (isError) {
+      setTimeout(() => {
+        setToasts(prev => prev.filter(toast => toast.id !== id));
+      }, 8000);
+    }
+
+
   }
 
   return (
@@ -551,7 +568,7 @@ function App() {
       {/* Toast */}
       <div className='toast-stack'>
         {toasts.map(toast => (
-          <MessageToast key={toast.id} message={toast.message} />
+          <MessageToast key={toast.id} toast={toast} setToasts={setToasts}/>
         ))}
       </div>
       

@@ -1,4 +1,5 @@
-export type Toast = {
-    id: number;
+export interface Toast {
+    id: string;
     message: string;
+    isError: boolean;
 }
