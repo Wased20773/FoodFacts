@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import VoiceButton from './components/VoiceButton';
 import FoodResultCard from './components/FoodResultCard';
 import { detectIntent } from './utils/intentDetector';
@@ -15,6 +15,7 @@ function App() {
   const [transcript, setTranscript] = useState<string>('');
   const latestTranscriptRef = useRef<string>('');
   const [isListening, setIsListening] = useState<boolean>(false);
+  const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
@@ -34,13 +35,15 @@ function App() {
     setShowResults(false);
     setIsLoading(true);
 
+    
     try {
       switch (detected.intent) {
         case 'SearchFoodIntent': {
           const productName = detected.slots.productName;
-  
+
           if (!productName) {
-            setResponseMessage('Please say a product name. ');
+            setResponseMessage('Please say a product name');
+            speak('Please say a product name');
             return;
           }
   
@@ -48,13 +51,15 @@ function App() {
           const product = data.products[0];
   
           if (!product) {
-            setResponseMessage(`I could not find ${productName}. `);
+            setResponseMessage(`I could not find ${productName}`);
+            speak(`I could not find ${productName}`);
             return;
           }
-  
+
           setSelectedProduct(product);
           setSecondProduct(null);
-          setResponseMessage(`I found ${product.product_name}. `);
+          setResponseMessage(`I found ${product.product_name}`);
+          speak(`I found ${product.product_name}`);
           setIsLoading(false);
           setShowResults(true);
           break;
@@ -65,7 +70,8 @@ function App() {
           const nutrient = detected.slots.nutrient;
   
           if (!productName || !nutrient) {
-            setResponseMessage('Please say a product and nutrient. ');
+            setResponseMessage('Please say a product and nutrient');
+            speak('Please say a product and nutrient');
             return;
           }
   
@@ -73,7 +79,8 @@ function App() {
           const product = data.products[0];
   
           if (!product) {
-            setResponseMessage(`I could not find ${productName}. `);
+            setResponseMessage(`I could not find ${productName}`);
+            speak(`I could not find ${productName}`);
             return;
           }
   
@@ -83,12 +90,14 @@ function App() {
           const value = getNutrientValue(product, nutrient);
   
           if (value === undefined || value === null) {
-            setResponseMessage(`I could not find ${nutrient} information for ${product.product_name}. `);
+            setResponseMessage(`I could not find ${nutrient} information for ${product.product_name}`);
+            speak(`I could not find ${nutrient} information for ${product.product_name}`);
             return;
           }
-          
+
           setSelectedNutriment(nutrient);
-          setResponseMessage(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams. `);
+          setResponseMessage(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams`);
+          speak(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams`);
           setIsLoading(false);
           setShowResults(true);
           break;
@@ -99,7 +108,8 @@ function App() {
           const secondProductName = detected.slots.secondProductName;
   
           if (!productName || !secondProductName) {
-            setResponseMessage('Please say two products to compare.');
+            setResponseMessage('Please say two products to compare');
+            speak('Please say two products to compare');
             return;
           }
   
@@ -110,22 +120,23 @@ function App() {
           const comparedProduct = secondData.products[0];
   
           if (!firstProduct || !comparedProduct) {
-            setResponseMessage('I could not find one of the products.');
+            setResponseMessage('I could not find one of the products');
+            speak('I could not find one of the products');
             return;
           }
-  
+
           setSelectedProduct(firstProduct);
           setSecondProduct(comparedProduct);
-          setResponseMessage(`Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}.`);
+          setResponseMessage(`Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}`);
+          speak(`Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}`);
           setIsLoading(false);
           setShowResults(true);
           break;
         }
   
         case 'UnknownIntent': {
-          setResponseMessage(
-            'Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices.'
-          );
+          setResponseMessage('Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices');
+          speak('Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices');
           setIsLoading(false);
           setShowResults(true);
           break;
@@ -139,10 +150,12 @@ function App() {
       setSecondProduct(null);
 
       if (error instanceof Error) {
-        setResponseMessage(error.message);
+        setResponseMessage(`${error.message}`);
+        speak(`${error.message}`);
       }
 
-      setResponseMessage('The Open Food Facts database is currently unavailable. ');
+      setResponseMessage('The Open Food Facts database is currently unavailable');
+      speak('The Open Food Facts database is currently unavailable');
       addToast('The Open Food Facts database is currently unavailable. ');
     }
   }
@@ -246,6 +259,51 @@ function App() {
       startListening();
     }
   }
+
+  function speak(message: string): void {
+    getVoices();
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(message);
+
+    utterance.voice = selectedVoiceRef.current;
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    utterance.pitch = 1.2;
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // A test function to see all the available voices
+  function getVoices(): void {
+    const voices = speechSynthesis.getVoices();
+
+    voices.forEach((voice) => {
+        console.log(
+            voice.name,
+            voice.lang,
+            voice.default
+        );
+    });
+  }
+
+  useEffect(() => {
+    function loadVoices(): void {
+        const voice = window.speechSynthesis
+            .getVoices()
+            .find((voice) => voice.name === 'Google UK English Male');
+
+        selectedVoiceRef.current = voice ?? null;
+    }
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+        window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
 
   function handleTranscriptChange(value: string): void {
     // Below is used for textarea to grow its height upward 

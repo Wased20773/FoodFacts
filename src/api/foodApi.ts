@@ -5,9 +5,7 @@ import { mockDatabase } from '../data/mockDatabase';
 
 const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
-export async function searchFood(query: string): Promise<FoodSearchResponse> {
-    console.log(import.meta.env.VITE_USE_MOCK_DATA);
-    
+export async function searchFood(query: string): Promise<FoodSearchResponse> {    
     if (USE_MOCK_DATA) {
         const product: FoodProduct = mockDatabase[query.toLowerCase()];
 
