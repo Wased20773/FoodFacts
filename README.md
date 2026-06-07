@@ -20,7 +20,7 @@ if this is your first time, run the following commands in your terminal window:
 
 ```txt
 git clone git@github.com:Wased20773/FoodFacts.git
-cd .\food-facts-vui\
+cd .\FoodFacts\
 npm install
 ```
 
@@ -33,7 +33,7 @@ npm install
 
 ## How to Run
 
-Before running any commands, make sure you are in the root folder; `food-facts-vui\`
+Before running any commands, make sure you are in the root folder; `FoodFacts\`
 
 There are two modes of the application:
 
