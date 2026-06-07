@@ -293,7 +293,7 @@ function App() {
       if (value < 80) return ' It is relatively low in calories.';
       if (value <= 150) return ' It contains a moderate amount of calories.';
       if (value <= 300) return ' It is relatively high in calories.'
-      return ' It is high in calories';
+      return ' It is high in calories.';
     }
 
     // Sugar
@@ -538,7 +538,7 @@ function App() {
       {/* Toast */}
       <div className='toast-stack'>
         {toasts.map(toast => (
-          <MessageToast key={toast.id} toast={toast} setToasts={setToasts}/>
+          <MessageToast key={toast.id} toast={toast} setToasts={setToasts} speak={speak}/>
         ))}
       </div>
 
