@@ -21,8 +21,6 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
   const [selectedNutriment, setSelectedNutriment] = useState<NutrientSlot | null>(null);
-  const [responseMessage, setResponseMessage] = useState<string>('');
-  const [isError, setIsError] = useState<boolean>(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
@@ -44,7 +42,6 @@ function App() {
 
           if (!productName) {
             message += 'Please say a product name';
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -55,7 +52,6 @@ function App() {
 
           if (!product) {
             message += `I could not find ${productName}`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -81,7 +77,6 @@ function App() {
 
           setSelectedProduct(product);
           setSecondProduct(null);
-          setResponseMessage(message);
           speak(message);
           setIsLoading(false);
           setShowResults(true);
@@ -95,7 +90,6 @@ function App() {
 
           if (!productName || !nutrient) {
             message += 'Please say a product and nutrient';
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -106,7 +100,6 @@ function App() {
 
           if (!product) {
             message += `I could not find ${productName}`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -119,7 +112,6 @@ function App() {
 
           if (value === undefined || value === null) {
             message += `I could not find ${nutrient} information for ${product.product_name}`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -129,7 +121,6 @@ function App() {
           message += aboutNutriment(nutrient, value);
           
           setSelectedNutriment(nutrient);
-          setResponseMessage(message);
           speak(message);
           setIsLoading(false);
           setShowResults(true);
@@ -143,7 +134,6 @@ function App() {
 
           if (!productName || !secondProductName) {
             message += 'Please say two products to compare';
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -157,7 +147,6 @@ function App() {
 
           if (!firstProduct && !comparedProduct) {
             message += `Sorry, I could not find ${productName} and ${secondProductName} as products`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -165,7 +154,6 @@ function App() {
 
           if (!firstProduct) {
             message += `Sorry, I could not find ${productName} as a product`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
@@ -173,60 +161,47 @@ function App() {
 
           if (!comparedProduct) {
             message += `Sorry, I could not find ${secondProductName} as a product`;
-            setResponseMessage(message);
             speak(message);
             addToast(message, true);
             return;
           }
 
-          message += `Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}.`;
+          message += `Comparing ${firstProduct.product_name} and ${comparedProduct.product_name}, where ${firstProduct.product_name} is the left product and ${comparedProduct.product_name} is the right product...`;
 
           message += compareNutriment(
             'calories',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.['energy-kcal_100g'] ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.['energy-kcal_100g'] ?? 0,
           );
 
           message += compareNutriment(
             'sugar',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.sugars_100g ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.sugars_100g ?? 0,
           );
 
           message += compareNutriment(
             'fat',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.fat_100g ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.fat_100g ?? 0,
           );
 
           message += compareNutriment(
             'protein',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.proteins_100g ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.proteins_100g ?? 0,
             true, // higher protein is better
           );
 
           message += compareNutriment(
             'salt',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.salt_100g ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.salt_100g ?? 0,
           );
 
           message += compareNutriment(
             'sodium',
-            firstProduct.product_name ?? 'First Product',
             firstProduct.nutriments?.sodium_100g ?? 0,
-            comparedProduct.product_name ?? 'Second Product',
             comparedProduct.nutriments?.sodium_100g ?? 0,
           );
 
@@ -244,7 +219,6 @@ function App() {
 
           setSelectedProduct(firstProduct);
           setSecondProduct(comparedProduct);
-          setResponseMessage(message);
           speak(message);
           setIsLoading(false);
           setShowResults(true);
@@ -254,7 +228,6 @@ function App() {
 
         case 'UnknownIntent': {
           message += 'Sorry, I did not understand. Try saying: search for Nutella, how much sugar does Nutella have, or compare Nutella and apple slices';
-          setResponseMessage(message);
           speak(message);
           setIsLoading(false);
           setShowResults(true);
@@ -271,7 +244,6 @@ function App() {
 
       message += error instanceof Error ? error.message : 'The Open Food Facts database is currently unavailable.';
 
-      setResponseMessage(message);
       speak(message);
       addToast(message, true);
     }
@@ -369,26 +341,24 @@ function App() {
 
   function compareNutriment(
     nutriment: string,
-    firstProductName: string,
     firstValue: number,
-    secondProductName: string,
     secondValue: number,
     higherIsBetter: boolean = false,
   ): string {
     if (firstValue === 0 && secondValue === 0) return ` Both products have zero ${nutriment}.`
-    if (firstValue === 0) return ` ${firstProductName} has no ${nutriment} compared to ${secondProductName}.`
-    if (secondValue === 0) return ` ${secondProductName} has no ${nutriment} compared to ${firstProductName}. `
+    if (firstValue === 0) return ` The left product does not have ${nutriment} compared to the right product.`
+    if (secondValue === 0) return ` The right product does not have ${nutriment} compared to the left product.`
     if (firstValue === secondValue) return ` Both products have the same ${nutriment} value.`
     
     if (higherIsBetter) {
       return firstValue > secondValue
-        ? ` ${firstProductName} has more ${nutriment}.`
-        : ` ${secondProductName} has more ${nutriment}.`;
+        ? ` The left product has more ${nutriment}.`
+        : ` The right product has more ${nutriment}.`;
     }
 
     return firstValue < secondValue
-      ? ` ${firstProductName} has less ${nutriment}.`
-      : ` ${secondProductName} has less ${nutriment}.`;
+      ? ` The left product has less ${nutriment}.`
+      : ` The right product has less ${nutriment}.`;
   }
 
   function isNutriscoreGood(value: string): string {
@@ -480,8 +450,8 @@ function App() {
 
     utterance.voice = selectedVoiceRef.current;
     utterance.lang = 'es-ES';
-    utterance.rate = 0.90;
-    utterance.pitch = 1.1;
+    utterance.rate = 0.80;
+    utterance.pitch = 0.9;
 
     window.speechSynthesis.speak(utterance);
   }
@@ -549,7 +519,7 @@ function App() {
     <div className='app-container'>
       <h1 className='heading-interface'>Food Facts VUI</h1>
 
-      {/* Loading View */}
+      {/* Loading Views */}
       {isLoading ?  (
         <Loading/>
       ) : selectedProduct && secondProduct ? (
@@ -571,8 +541,6 @@ function App() {
           <MessageToast key={toast.id} toast={toast} setToasts={setToasts}/>
         ))}
       </div>
-      
-      {/* For rendering compared results */}
 
       <VoiceButton isListening={isListening} loading={isLoading} showResults={showResults} onClick={toggleListening} />
 
