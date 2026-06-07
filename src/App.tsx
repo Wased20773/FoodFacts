@@ -4,6 +4,7 @@ import FoodResultCard from './components/FoodResultCard';
 import { detectIntent } from './utils/intentDetector';
 import { searchFood } from './api/foodApi';
 import type { FoodProduct } from './types/food';
+import type { NutrientSlot } from './utils/slots';
 import './App.css'
 import Loading from './components/Loading';
 import CompareResultsCard from './components/CompareResultsCard';
@@ -18,6 +19,7 @@ function App() {
   const [showResults, setShowResults] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
   const [secondProduct, setSecondProduct] = useState<FoodProduct | null>(null);
+  const [selectedNutriment, setSelectedNutriment] = useState<NutrientSlot | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -28,6 +30,7 @@ function App() {
 
   async function handleVoiceCommand(command: string) {
     const detected = detectIntent(command);
+    setSelectedNutriment(null);
     setShowResults(false);
     setIsLoading(true);
 
@@ -83,7 +86,8 @@ function App() {
             setResponseMessage(`I could not find ${nutrient} information for ${product.product_name}. `);
             return;
           }
-  
+          
+          setSelectedNutriment(nutrient);
           setResponseMessage(`${product.product_name} has ${value} ${getNutientUnit(nutrient)} of ${nutrient} per 100 grams. `);
           setIsLoading(false);
           setShowResults(true);
@@ -283,6 +287,7 @@ function App() {
         <section className={`result-section ${showResults ? 'loading-results' : ''}`}>
           <FoodResultCard
             product={selectedProduct}
+            selectedNutriment={selectedNutriment}
           />
         </section>
       )}

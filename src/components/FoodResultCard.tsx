@@ -1,12 +1,14 @@
 import type { FoodProduct, Nutriments } from '../types/food';
+import type { NutrientSlot } from '../utils/slots';
 import './FoodResultCard.css'
 type Props = {
     product: FoodProduct | null;
     compareProduct?: FoodProduct;
+    selectedNutriment?: NutrientSlot | null;
     side?: 'left' | 'right';
 };
 
-export default function FoodResultCard({ product, compareProduct, side }: Props): React.JSX.Element {
+export default function FoodResultCard({ product, compareProduct, selectedNutriment, side }: Props): React.JSX.Element {
     function compareProducts(nutriment: keyof Nutriments): string {
         if (!compareProduct) return '';
         
@@ -38,6 +40,10 @@ export default function FoodResultCard({ product, compareProduct, side }: Props)
 
         return 'product-poor-nutriment';
     }
+
+    function highlightNutriment(nutriment: NutrientSlot): string {
+        return nutriment === selectedNutriment ? 'product-highlight-nutriment' : '';
+    }
     
     return (
         <article className='food-result-card' style={side ? side === 'left' ? {marginRight: 0} : {marginLeft: 0} : undefined}>
@@ -63,27 +69,27 @@ export default function FoodResultCard({ product, compareProduct, side }: Props)
                 <div>
                     <h4 style={{marginBottom: 0}}>Nutriments</h4>
                     <ul style={{marginTop: 0}}>
-                        <li className={compareProducts('energy-kcal_100g')}>
+                        <li className={`${compareProducts('energy-kcal_100g')} ${highlightNutriment('calories')}`}>
                             Calories: { product?.nutriments?.['energy-kcal_100g'] ?? 'N/A' }
                         </li>
 
-                        <li className={compareProducts('sugars_100g')}>
+                        <li className={`${compareProducts('sugars_100g')} ${highlightNutriment('sugar')}`}>
                             Sugar: { product?.nutriments?.sugars_100g ?? 'N/A' } g
                         </li>
 
-                        <li className={compareProducts('fat_100g')}>
+                        <li className={`${compareProducts('fat_100g')} ${highlightNutriment('fat')}`}>
                             Fat: { product?.nutriments?.fat_100g ?? 'N/A' } g
                         </li>
 
-                        <li className={compareProducts('proteins_100g')}>
+                        <li className={`${compareProducts('proteins_100g')} ${highlightNutriment('protein')}`}>
                             Protein: { product?.nutriments?.proteins_100g ?? 'N/A' } g
                         </li>
 
-                        <li className={compareProducts('salt_100g')}>
+                        <li className={`${compareProducts('salt_100g')} ${highlightNutriment('salt')}`}>
                             Salt: { product?.nutriments?.salt_100g ?? 'N/A' } g
                         </li>
 
-                        <li className={compareProducts('sodium_100g')}>
+                        <li className={`${compareProducts('sodium_100g')} ${highlightNutriment('sodium')}`}>
                             Sodium: { product?.nutriments?.sodium_100g ?? 'N/A' } g
                         </li>
                     </ul>

@@ -50,3 +50,8 @@
 .product-equal-nutriment {
     color: rgb(236, 207, 112);
 }
+
+.product-highlight-nutriment {
+    color: rgb(246, 144, 255);
+    font-weight: bold;
+}
