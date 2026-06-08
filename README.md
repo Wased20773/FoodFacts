@@ -1,6 +1,7 @@
 # Food Facts Web App
 
 This is a VUI (Voice User Interface) that assist users with food products. The app works like a VA where there are three intents and 15 utterances in each one. Through voice commands, the application detects which intent it belongs to and outputs the desired outcome for that intent. This app is meant to assist users choosing the right, and healthier, food product, and it can also serve as a nutrition app where the user can ask to compare two products to see which one is healthier.
+
 ## Technology Stack
 
 - React + Vite
